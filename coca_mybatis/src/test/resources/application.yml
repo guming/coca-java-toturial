@@ -1,0 +1,27 @@
+logging:
+  config: classpath:log4j.xml
+
+spring:
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  datasource:
+    driver-class-name: org.h2.Driver
+    schema: classpath:init.sql
+    url: jdbc:h2:mem:test
+    username: sa
+
+mybatis:
+  configuration:
+    lazy-loading-enabled: true
+    cache-enabled: true
+    aggressive-lazy-loading: false
+    multiple-result-sets-enabled: true
+    use-column-label: true
+    use-generated-keys: true
+    auto-mapping-behavior: full
+    default-statement-timeout: 3
+    call-setters-on-nulls: true
+    map-underscore-to-camel-case: true

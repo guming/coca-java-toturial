@@ -1,0 +1,52 @@
+logging:
+  config: classpath:log4j.xml
+
+spring:
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    druid:
+      url: jdbc:mysql://localhost:3306/study
+      username: root
+      password: 123456
+      initial-size: 20
+      min-idle: 50
+      max-active: 200
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      validation-query: SELECT 'x' FROM DUAL
+      test-while-idle: true
+      test-on-borrow: true
+      max-open-prepared-statements: 100
+      remove-abandoned: true
+      remove-abandoned-timeout-millis: 1800
+      log-abandoned: true
+      query-timeout: 3
+      use-global-data-source-stat: true
+
+      stat-view-servlet:
+        login-username: admin
+        login-password: admin
+        url-pattern: /druid/*
+        reset-enable: false
+
+mybatis:
+  type-aliases-package: com.springboot.springbootmybatisannotation.model
+  configuration:
+    lazy-loading-enabled: true
+    cache-enabled: true
+    aggressive-lazy-loading: false
+    multiple-result-sets-enabled: true
+    use-column-label: true
+    use-generated-keys: true
+    auto-mapping-behavior: full
+    default-statement-timeout: 3
+    call-setters-on-nulls: true
+    map-underscore-to-camel-case: true
+    config-location: classpath:mybatis-config.xml
+    mapper-locations: classpath:mybatis/mapper/*.xml
+
