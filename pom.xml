@@ -9,10 +9,10 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>coca_mybatis</module>
-        <module>coca_gtid</module>
-        <module>coca_kafka</module>
-        <module>coca_agent</module>
+        <module>coca-mybatis-dynamic-tx</module>
+        <module>coca-gtid-demo</module>
+        <module>coca-kafka</module>
+        <module>coca-agent-demo</module>
         <module>coca-concurrency-limits</module>
     </modules>
 

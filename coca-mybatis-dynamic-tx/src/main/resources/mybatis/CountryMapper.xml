@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.coca.mybatis.dao.CountryMapper">
+    <select id="get" resultType="org.coca.simple.model.Country">
+        select id,countryname,countrycode from country where id = #{id}
+    </select>
+    <insert id="insert" parameterType="org.coca.simple.model.Country" useGeneratedKeys="true" keyProperty="id">
+    insert into country (id,countryname,countrycode)
+    values (#{id}, #{countryname},#{countrycode})
+  </insert>
+</mapper>
