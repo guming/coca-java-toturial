@@ -13,6 +13,7 @@
         <module>coca_gtid</module>
         <module>coca_kafka</module>
         <module>coca_agent</module>
+        <module>coca-concurrency-limits</module>
     </modules>
 
 
