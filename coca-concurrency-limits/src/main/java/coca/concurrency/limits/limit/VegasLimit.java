@@ -76,11 +76,6 @@ public class VegasLimit extends AbstractLimit{
             this.maxConcurrency = maxConcurrency;
             return this;
         }
-        public Builder metricRegistry(MetricRegistry registry) {
-            this.registry = registry;
-            return this;
-        }
-
 
         public VegasLimit build(){
             return new VegasLimit(this);
@@ -133,7 +128,7 @@ public class VegasLimit extends AbstractLimit{
     }
 
     private int updateEstimatedLimit(long rtt, int inflight, boolean didDrop) {
-        final int queueSize = (int) Math.ceil(estimatedLimit * (double) rtt_noload / rtt);
+        final int queueSize = (int) Math.ceil(estimatedLimit * (1-(double) rtt_noload / rtt));
         double newLimit;
         if(didDrop){
             newLimit = decreaseFunc.apply(estimatedLimit);
