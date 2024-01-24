@@ -1,13 +1,11 @@
 package coca.concurrency.limits.limit;
 
 import coca.concurrency.limits.MetricRegistry;
-import coca.concurrency.limits.MetricValues;
+import coca.concurrency.limits.MetricConfig;
 import coca.concurrency.limits.internal.EmptyMetricRegistry;
 import coca.concurrency.limits.limit.functions.Log10RootFunction;
 
-import java.lang.reflect.MalformedParametersException;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class VegasLimit extends AbstractLimit{
@@ -112,7 +110,7 @@ public class VegasLimit extends AbstractLimit{
         this.smoothing = builder.smoothing;
         this.probeMultiplier = builder.probeMultiplier;
         this.estimatedLimit = builder.initLimit;
-        this.rttSampleListener = builder.registry.distribution(MetricValues.MIN_RTT_NAME);
+        this.rttSampleListener = builder.registry.distribution(MetricConfig.MIN_RTT_NAME);
 
     }
     private void resetProbeJitter() {

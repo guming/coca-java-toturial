@@ -2,7 +2,7 @@ package coca.concurrency.limits.limiter;
 
 import coca.concurrency.limits.Limit;
 import coca.concurrency.limits.MetricRegistry;
-import coca.concurrency.limits.MetricValues;
+import coca.concurrency.limits.MetricConfig;
 import coca.concurrency.limits.internal.EmptyMetricRegistry;
 import coca.concurrency.limits.limit.VegasLimit;
 
@@ -57,11 +57,11 @@ public class AbstractLimiter {
         this.limit = limitAlgorithm.getLimit();
         this.limitAlgorithm.notifyOnChange(this::onNewLimit);
 
-        builder.registry.gauge(MetricValues.LIMIT_NAME, this::getLimit);
-        this.successCounter = builder.registry.counter(MetricValues.CALL_NAME, ID_TAG, builder.name, STATUS_TAG, "success");
-        this.droppedCounter = builder.registry.counter(MetricValues.CALL_NAME, ID_TAG, builder.name, STATUS_TAG, "dropped");
-        this.ignoredCounter = builder.registry.counter(MetricValues.CALL_NAME, ID_TAG, builder.name, STATUS_TAG, "ignored");
-        this.rejectedCounter = builder.registry.counter(MetricValues.CALL_NAME, ID_TAG, builder.name, STATUS_TAG, "rejected");
+        builder.registry.gauge(MetricConfig.LIMIT_NAME, this::getLimit);
+        this.successCounter = builder.registry.counter(MetricConfig.CALL_NAME, ID_TAG, builder.name, STATUS_TAG, "success");
+        this.droppedCounter = builder.registry.counter(MetricConfig.CALL_NAME, ID_TAG, builder.name, STATUS_TAG, "dropped");
+        this.ignoredCounter = builder.registry.counter(MetricConfig.CALL_NAME, ID_TAG, builder.name, STATUS_TAG, "ignored");
+        this.rejectedCounter = builder.registry.counter(MetricConfig.CALL_NAME, ID_TAG, builder.name, STATUS_TAG, "rejected");
     }
 
     public int getInFlight() {
