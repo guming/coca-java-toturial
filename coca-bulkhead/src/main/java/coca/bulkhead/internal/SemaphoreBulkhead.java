@@ -114,7 +114,7 @@ public class SemaphoreBulkhead implements Bulkhead {
         return config;
     }
 
-    private final class BulkheadEventProcessor extends EventProcessor<BulkheadEvent> implements EventPublisher,
+    private static final class BulkheadEventProcessor extends EventProcessor<BulkheadEvent> implements EventPublisher,
             EventConsumer<BulkheadEvent> {
         @Override
         public EventPublisher onCallRejected(EventConsumer<BulkheadOnCallRejectedEvent> eventConsumer) {
