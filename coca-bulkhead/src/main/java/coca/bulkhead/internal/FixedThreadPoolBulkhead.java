@@ -38,7 +38,7 @@ public class FixedThreadPoolBulkhead implements ThreadPoolBulkhead {
                 config.getQueueCapacity() == 0 ? new SynchronousQueue<>() : new ArrayBlockingQueue<>(config.getQueueCapacity()),
                 config.getRejectedExecutionHandler());
         this.metrics = new FixedThreadPoolBulkhead.BulkheadMetrics();
-        this.eventProcessor = new FixedThreadPoolBulkhead.BulkheadEventProcessor();
+        this.eventProcessor = new BulkheadEventProcessor();
     }
 
     public FixedThreadPoolBulkhead(String name) {
@@ -118,13 +118,14 @@ public class FixedThreadPoolBulkhead implements ThreadPoolBulkhead {
                 if(throwable!=null){
                     promise.completeExceptionally(throwable);
                 }else {
-
+                    promise.complete(result);
                 }
             });
-        }catch(Exception e){
-
+        }catch(RejectedExecutionException e){
+            publishBulkheadEvent(() -> new BulkheadOnCallRejectedEvent(name));
+            throw e;
         }
-        return null;
+        return promise;
     }
 
     @Override
@@ -196,7 +197,7 @@ public class FixedThreadPoolBulkhead implements ThreadPoolBulkhead {
             return getMaxThreadPoolSize()-getActiveThreadCount();
         }
     }
-    private final class BulkheadEventProcessor extends EventProcessor<BulkheadEvent> implements ThreadPoolBulkheadEventPublisher,
+    private static final class BulkheadEventProcessor extends EventProcessor<BulkheadEvent> implements ThreadPoolBulkheadEventPublisher,
             EventConsumer<BulkheadEvent> {
         @Override
         public ThreadPoolBulkheadEventPublisher onCallRejected(EventConsumer<BulkheadOnCallRejectedEvent> eventConsumer) {
