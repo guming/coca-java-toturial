@@ -12,6 +12,7 @@ import java.util.concurrent.Callable;
 import java.util.function.Supplier;
 
 public interface Bulkhead {
+    boolean tryAcquirePermission();
     void acquirePermission();
 
     void releasePermission();
@@ -84,6 +85,10 @@ public interface Bulkhead {
     default <T> T executeCallable(Callable<T> callable) throws Exception {
         return decorateCallable(this, callable).call();
     }
+
+    Metrics getMetrics();
+
+    BulkheadConfig getBulkheadConfig();
 
     interface Metrics {
         int getAvailableConcurrentCalls();

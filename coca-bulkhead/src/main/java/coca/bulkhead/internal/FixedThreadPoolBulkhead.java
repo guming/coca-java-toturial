@@ -9,13 +9,11 @@ import coca.bulkhead.event.BulkheadOnCallFinishedEvent;
 import coca.bulkhead.event.BulkheadOnCallPermittedEvent;
 import coca.bulkhead.event.BulkheadOnCallRejectedEvent;
 
-import javax.xml.crypto.dsig.spec.XPathFilterParameterSpec;
 import java.util.Map;
 import java.util.concurrent.*;
 import java.util.function.Supplier;
 
 import static java.util.Collections.emptyMap;
-import static java.util.Collections.max;
 import static java.util.Objects.requireNonNull;
 
 public class FixedThreadPoolBulkhead implements ThreadPoolBulkhead {
