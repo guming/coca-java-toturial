@@ -4,18 +4,19 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-public class EventProcessor<T> implements EventPublisher<T>{
+public class EventProcessor<T> implements EventPublisher<T> {
     private final Set<EventConsumer<T>> eventConsumers = new CopyOnWriteArraySet<>();
     private final ConcurrentHashMap<String, Set<EventConsumer<T>>> eventConsumerMap = new ConcurrentHashMap<>();
     private boolean consumerRegistered;
 
     @Override
-    public void onEvent(EventConsumer<T> eventConsumer) {
+    public synchronized void onEvent(EventConsumer<T> eventConsumer) {
         this.eventConsumers.add(eventConsumer);
         this.consumerRegistered = true;
     }
+
     @SuppressWarnings("unchecked")
-    public void registerConsumer(String className, EventConsumer<? extends T> eventConsumer) {
+    public synchronized void registerConsumer(String className, EventConsumer<? extends T> eventConsumer) {
         this.eventConsumerMap.compute(className, (key, consumers) -> {
             if (consumers == null) {
                 consumers = new CopyOnWriteArraySet<>();
@@ -28,18 +29,20 @@ public class EventProcessor<T> implements EventPublisher<T>{
         });
         this.consumerRegistered = true;
     }
-    public boolean hasConsumer(){
+
+    public boolean hasConsumer() {
         return this.consumerRegistered;
     }
+
     public <E extends T> boolean processEvent(E event) {
         boolean consumed = false;
-        if(!eventConsumers.isEmpty()){
+        if (!eventConsumers.isEmpty()) {
             for (EventConsumer<T> onEventConsumer : eventConsumers) {
                 onEventConsumer.consumeEvent(event);
             }
             consumed = true;
         }
-        if(!eventConsumerMap.isEmpty()){
+        if (!eventConsumerMap.isEmpty()) {
             Set<EventConsumer<T>> consumers = this.eventConsumerMap.get(event.getClass().getName());
             if (consumers != null && !consumers.isEmpty()) {
                 for (EventConsumer<T> consumer : consumers) {
