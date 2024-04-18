@@ -34,33 +34,34 @@ public class MybatisRouterPlugin implements Interceptor {
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
         boolean synchronizationActive = TransactionSynchronizationManager.isSynchronizationActive();
-        if(!synchronizationActive&&DynamicDataSourceHolder.getDataSource()==null) {
+        if (!synchronizationActive && DynamicDataSourceHolder.getDataSource() == null) {
+
             Object[] objects = invocation.getArgs();
             MappedStatement ms = (MappedStatement) objects[0];
 
             String key = "";
-            if((key = cacheMap.get(ms.getId())) == null) {
+            if ((key = cacheMap.get(ms.getId())) == null) {
                 //read
-                if(ms.getSqlCommandType().equals(SqlCommandType.SELECT)) {
-                    if(ms.getId().contains(SelectKeyGenerator.SELECT_KEY_SUFFIX)) {
+                if (ms.getSqlCommandType().equals(SqlCommandType.SELECT)) {
+                    if (ms.getId().contains(SelectKeyGenerator.SELECT_KEY_SUFFIX)) {
                         key = DataSources.MASTER_DATASOURCE;
                     } else {
                         BoundSql boundSql = ms.getSqlSource().getBoundSql(objects[1]);
                         String sql = boundSql.getSql().toLowerCase(Locale.CHINA).replaceAll("[\\t\\n\\r]", " ");
-                        if(sql.matches(REGEX)) {
+                        if (sql.matches(REGEX)) {
                             key = DataSources.MASTER_DATASOURCE;
                         } else {
                             key = DataSources.SLAVE_DATASOURCE;
                         }
                     }
-                }else{
+                } else {
                     key = DataSources.MASTER_DATASOURCE;
                 }
                 logger.info("set method[{}] use [{}] Strategy, SqlCommandType [{}]..", ms.getId(), key, ms.getSqlCommandType().name());
                 cacheMap.put(ms.getId(), key);
             }
             DynamicDataSourceHolder.putDataSource(key);
-            System.out.println(DynamicDataSourceHolder.getDataSource());
+//            System.out.println(DynamicDataSourceHolder.getDataSource());
         }
 
         return invocation.proceed();

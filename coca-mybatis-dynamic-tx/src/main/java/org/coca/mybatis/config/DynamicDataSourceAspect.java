@@ -21,29 +21,20 @@ public class DynamicDataSourceAspect {
     public static final Logger log = LoggerFactory.getLogger(DynamicDataSourceAspect.class);
     @Before("@annotation(org.coca.mybatis.config.FocusMaster)")
     public void beforeSwitchDS(JoinPoint point){
-
-        //获得当前访问的class
         Class<?> className = point.getTarget().getClass();
-
-        //获得访问的方法名
         String methodName = point.getSignature().getName();
-        //得到方法的参数的类型
         Class[] argClass = ((MethodSignature)point.getSignature()).getParameterTypes();
         String dataSource = DataSources.MASTER_DATASOURCE;//default
         try {
-            // 得到访问的方法对象
             Method method = className.getMethod(methodName, argClass);
-
-            // 判断是否存在@DS注解
             if (method.isAnnotationPresent(FocusMaster.class)) {
                 FocusMaster annotation = method.getAnnotation(FocusMaster.class);
-                // 取出注解中的数据源名
                 dataSource = annotation.value();
             }
         } catch (Exception e) {
             log.error("routing datasource exception, " + methodName, e);
         }
-        // 切换数据源
+        // switch datasource key
         DynamicDataSourceHolder.putDataSource(dataSource);
     }
 
