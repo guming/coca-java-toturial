@@ -40,6 +40,10 @@ public class WheelTimer implements Timer {
         this(Executors.defaultThreadFactory());
     }
 
+    public WheelTimer(long tickDuration, TimeUnit unit) {
+        this(Executors.defaultThreadFactory(), tickDuration, unit);
+    }
+
     public WheelTimer(ThreadFactory threadFactory) {
         this(threadFactory, 100, TimeUnit.MILLISECONDS);
     }
@@ -128,11 +132,18 @@ public class WheelTimer implements Timer {
         if(interrupted){
             Thread.currentThread().interrupt();
         }
-        return worker.unprocessedTimeouts;
+        return worker.unprocessedTimeouts();
     }
 
     @Override
     public Timeout newTimeout(TimerTask timerTask, long delay, TimeUnit unit) {
+        long pendingTimeoutsCount = pendingTimeouts.incrementAndGet();
+        if (maxPendingTimeouts > 0 && pendingTimeoutsCount > maxPendingTimeouts) {
+            pendingTimeouts.decrementAndGet();
+            throw new RejectedExecutionException("Number of pending timeouts ("
+                    + pendingTimeoutsCount + ") is greater than or equal to maximum allowed pending "
+                    + "timeouts (" + maxPendingTimeouts + ")");
+        }
         start();
         long deadline = System.nanoTime() + unit.toNanos(delay) - startTime;
         if (delay > 0 && deadline < 0) {
@@ -141,6 +152,14 @@ public class WheelTimer implements Timer {
         HashedWheelTimeout timeout = new HashedWheelTimeout(timerTask, this, deadline);
         timeoutQueue.add(timeout);
         return timeout;
+    }
+
+    public long pendingTimeouts() {
+        return pendingTimeouts.get();
+    }
+
+    private static void reportTooManyInstances() {
+        System.out.println("report Too Many Instances");
     }
 
 
@@ -329,7 +348,11 @@ public class WheelTimer implements Timer {
 
         public void remove(){
             HashedWheelBucket bucket = this.bucket;
-            bucket.remove(this);
+            if (bucket == null) {
+                timer.pendingTimeouts.decrementAndGet();
+            }else {
+                bucket.remove(this);
+            }
         }
     }
 
@@ -390,6 +413,7 @@ public class WheelTimer implements Timer {
             timeout.prev = null;
             timeout.next = null;
             timeout.bucket = null;
+            timeout.timer.pendingTimeouts.decrementAndGet();
             return next;
         }
 
@@ -412,7 +436,7 @@ public class WheelTimer implements Timer {
         }
 
         public void clearTimeout(Set<Timeout> set) {
-            for (; ; ) {
+            for (;;) {
                 HashedWheelTimeout timeout = pollTimeout();
                 if (timeout == null) {
                     return;

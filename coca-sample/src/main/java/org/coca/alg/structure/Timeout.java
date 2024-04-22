@@ -9,4 +9,6 @@ public interface Timeout {
 
     boolean isCancelled();
 
+    boolean cancel();
+
 }
