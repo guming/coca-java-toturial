@@ -8,6 +8,7 @@ import coca.bulkhead.event.BulkheadEvent;
 import coca.bulkhead.event.BulkheadOnCallFinishedEvent;
 import coca.bulkhead.event.BulkheadOnCallPermittedEvent;
 import coca.bulkhead.event.BulkheadOnCallRejectedEvent;
+import jdk.internal.jline.internal.Nullable;
 
 import java.util.Map;
 import java.util.concurrent.*;
@@ -41,6 +42,10 @@ public class FixedThreadPoolBulkhead implements ThreadPoolBulkhead {
 
     public FixedThreadPoolBulkhead(String name) {
         this(ThreadPoolBulkheadConfig.ofDefaults(), name, emptyMap());
+    }
+
+    public FixedThreadPoolBulkhead(String name, @Nullable ThreadPoolBulkheadConfig bulkheadConfig) {
+        this( bulkheadConfig, name, emptyMap());
     }
 
     public FixedThreadPoolBulkhead(String name, Map<String, String> tags) {

@@ -6,6 +6,7 @@ import coca.bulkhead.event.BulkheadEvent;
 import coca.bulkhead.event.BulkheadOnCallFinishedEvent;
 import coca.bulkhead.event.BulkheadOnCallPermittedEvent;
 import coca.bulkhead.event.BulkheadOnCallRejectedEvent;
+import coca.bulkhead.internal.FixedThreadPoolBulkhead;
 
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -18,6 +19,10 @@ public interface ThreadPoolBulkhead extends AutoCloseable {
     String getName();
 
     ThreadPoolBulkheadConfig getBulkheadConfig();
+
+    static ThreadPoolBulkhead of(String name, ThreadPoolBulkheadConfig config) {
+        return new FixedThreadPoolBulkhead(name, config);
+    }
 
     Map<String, String> getTags();
 

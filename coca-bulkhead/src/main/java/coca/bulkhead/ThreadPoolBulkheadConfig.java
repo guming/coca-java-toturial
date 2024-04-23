@@ -42,7 +42,7 @@ public class ThreadPoolBulkheadConfig {
 
     private ThreadPoolBulkheadConfig(){}
 
-    public Builder custom(){
+    public static Builder custom(){
         return new Builder();
     }
 
