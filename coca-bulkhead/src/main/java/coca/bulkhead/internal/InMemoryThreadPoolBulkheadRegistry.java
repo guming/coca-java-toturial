@@ -145,8 +145,13 @@ public class InMemoryThreadPoolBulkheadRegistry extends AbstractRegistry<ThreadP
 
     @Override
     public void close() throws IOException {
-
+        for (ThreadPoolBulkhead bulkhead: getAllBulkheads()) {
+            try {
+                bulkhead.close();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
-
 
 }

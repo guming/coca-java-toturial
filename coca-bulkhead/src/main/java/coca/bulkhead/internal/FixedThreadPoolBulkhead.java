@@ -18,8 +18,6 @@ import static java.util.Objects.requireNonNull;
 
 public class FixedThreadPoolBulkhead implements ThreadPoolBulkhead {
 
-    private static final String CONFIG_MUST_NOT_BE_NULL = "Config must not be null";
-    private static final String TAGS_MUST_NOTE_BE_NULL = "Tags must not be null";
     private final ThreadPoolExecutor executorService;
     private final ThreadPoolBulkheadConfig config;
     private final Map<String, String> tags;
