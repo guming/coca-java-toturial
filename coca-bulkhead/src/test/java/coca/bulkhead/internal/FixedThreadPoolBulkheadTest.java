@@ -2,23 +2,20 @@ package coca.bulkhead.internal;
 
 import coca.bulkhead.ThreadPoolBulkhead;
 import coca.bulkhead.ThreadPoolBulkheadConfig;
+import coca.bulkhead.core.registry.*;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.Before;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
-class FixedThreadPoolBulkheadTest {
+public class FixedThreadPoolBulkheadTest {
 
     private ThreadPoolBulkhead bulkhead;
     private FixedThreadPoolBulkhead fixedThreadPoolBulkhead;

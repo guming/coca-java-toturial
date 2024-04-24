@@ -8,7 +8,6 @@ import coca.bulkhead.event.BulkheadEvent;
 import coca.bulkhead.event.BulkheadOnCallFinishedEvent;
 import coca.bulkhead.event.BulkheadOnCallPermittedEvent;
 import coca.bulkhead.event.BulkheadOnCallRejectedEvent;
-import jdk.internal.jline.internal.Nullable;
 
 import java.util.Map;
 import java.util.concurrent.*;
@@ -18,6 +17,7 @@ import static java.util.Collections.emptyMap;
 import static java.util.Objects.requireNonNull;
 
 public class FixedThreadPoolBulkhead implements ThreadPoolBulkhead {
+
     private static final String CONFIG_MUST_NOT_BE_NULL = "Config must not be null";
     private static final String TAGS_MUST_NOTE_BE_NULL = "Tags must not be null";
     private final ThreadPoolExecutor executorService;
@@ -30,21 +30,24 @@ public class FixedThreadPoolBulkhead implements ThreadPoolBulkhead {
 
 
     public FixedThreadPoolBulkhead(ThreadPoolBulkheadConfig config, String name, Map<String, String> tags) {
-        this.config = requireNonNull(config,CONFIG_MUST_NOT_BE_NULL);
+        this.config = config;
         this.name = name;
-        this.tags = requireNonNull(tags, TAGS_MUST_NOTE_BE_NULL);
+        this.tags = tags;
         this.executorService = new ThreadPoolExecutor(config.getCoreThreadPoolSize(), config.getMaxThreadPoolSize(), config.getKeepAliveDuration().toMillis(), TimeUnit.MILLISECONDS,
                 config.getQueueCapacity() == 0 ? new SynchronousQueue<>() : new ArrayBlockingQueue<>(config.getQueueCapacity()),
                 config.getRejectedExecutionHandler());
         this.metrics = new FixedThreadPoolBulkhead.BulkheadMetrics();
         this.eventProcessor = new BulkheadEventProcessor();
     }
+    public FixedThreadPoolBulkhead(String name, Supplier<ThreadPoolBulkheadConfig> configSupplier) {
+        this(configSupplier.get(),name, emptyMap());
+    }
 
     public FixedThreadPoolBulkhead(String name) {
         this(ThreadPoolBulkheadConfig.ofDefaults(), name, emptyMap());
     }
 
-    public FixedThreadPoolBulkhead(String name, @Nullable ThreadPoolBulkheadConfig bulkheadConfig) {
+    public FixedThreadPoolBulkhead(String name, ThreadPoolBulkheadConfig bulkheadConfig) {
         this( bulkheadConfig, name, emptyMap());
     }
 

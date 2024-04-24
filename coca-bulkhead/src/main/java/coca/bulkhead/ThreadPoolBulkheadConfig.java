@@ -3,6 +3,7 @@ package coca.bulkhead;
 import java.time.Duration;
 import java.util.Objects;
 import java.util.concurrent.RejectedExecutionHandler;
+import java.util.concurrent.ThreadPoolExecutor;
 
 public class ThreadPoolBulkheadConfig {
     public static final int DEFAULT_QUEUE_CAPACITY = 100;
@@ -17,7 +18,7 @@ public class ThreadPoolBulkheadConfig {
     private int queueCapacity = DEFAULT_QUEUE_CAPACITY;
     private Duration keepAliveDuration = DEFAULT_KEEP_ALIVE_DURATION;
 
-    private RejectedExecutionHandler rejectedExecutionHandler;
+    private RejectedExecutionHandler rejectedExecutionHandler = new ThreadPoolExecutor.AbortPolicy();
 
     public int getMaxThreadPoolSize() {
         return maxThreadPoolSize;

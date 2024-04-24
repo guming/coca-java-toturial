@@ -24,6 +24,19 @@ public interface ThreadPoolBulkhead extends AutoCloseable {
         return new FixedThreadPoolBulkhead(name, config);
     }
 
+    static ThreadPoolBulkhead of(String name, ThreadPoolBulkheadConfig config, Map<String, String> tags) {
+        return new FixedThreadPoolBulkhead(config,name, tags);
+    }
+
+    static ThreadPoolBulkhead of(String name,
+                                 Supplier<ThreadPoolBulkheadConfig> bulkheadConfigSupplier) {
+        return new FixedThreadPoolBulkhead(name, bulkheadConfigSupplier);
+    }
+
+    static ThreadPoolBulkhead ofDefaults(String name) {
+        return new FixedThreadPoolBulkhead(name);
+    }
+
     Map<String, String> getTags();
 
     ThreadPoolBulkheadEventPublisher getEventPublisher();
