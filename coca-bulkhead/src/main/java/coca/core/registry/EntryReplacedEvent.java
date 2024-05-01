@@ -1,4 +1,4 @@
-package coca.bulkhead.core.registry;
+package coca.core.registry;
 
 public class EntryReplacedEvent<E> extends  AbstractRegistryEvent{
     private E replacedEntry;

@@ -2,8 +2,8 @@ package coca.bulkhead.internal;
 
 import coca.bulkhead.Bulkhead;
 import coca.bulkhead.BulkheadConfig;
-import coca.bulkhead.core.EventConsumer;
-import coca.bulkhead.core.EventProcessor;
+import coca.core.EventConsumer;
+import coca.core.EventProcessor;
 import coca.bulkhead.event.BulkheadEvent;
 import coca.bulkhead.event.BulkheadOnCallFinishedEvent;
 import coca.bulkhead.event.BulkheadOnCallPermittedEvent;

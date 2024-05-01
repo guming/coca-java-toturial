@@ -1,6 +1,4 @@
-package coca.bulkhead.core.registry;
-
-import coca.bulkhead.ThreadPoolBulkhead;
+package coca.core.registry;
 
 public interface RegistryEventConsumer<E> {
 

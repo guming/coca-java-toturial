@@ -1,4 +1,4 @@
-package coca.bulkhead.core.funcs;
+package coca.core.funcs;
 
 import java.util.function.Supplier;
 

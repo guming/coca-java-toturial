@@ -1,4 +1,4 @@
-package coca.bulkhead.core;
+package coca.core;
 
 import java.util.Collection;
 import java.util.Optional;

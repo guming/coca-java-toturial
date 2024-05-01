@@ -3,10 +3,10 @@ package coca.bulkhead.internal;
 import coca.bulkhead.ThreadPoolBulkhead;
 import coca.bulkhead.ThreadPoolBulkheadConfig;
 import coca.bulkhead.ThreadPoolBulkheadRegistry;
-import coca.bulkhead.core.RegistryStore;
-import coca.bulkhead.core.registry.AbstractRegistry;
-import coca.bulkhead.core.registry.InMemoryRegistryStore;
-import coca.bulkhead.core.registry.RegistryEventConsumer;
+import coca.core.RegistryStore;
+import coca.core.registry.AbstractRegistry;
+import coca.core.registry.InMemoryRegistryStore;
+import coca.core.registry.RegistryEventConsumer;
 
 import java.io.IOException;
 import java.util.*;

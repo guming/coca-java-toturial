@@ -1,8 +1,8 @@
 package coca.bulkhead;
 
-import coca.bulkhead.core.Registry;
-import coca.bulkhead.core.RegistryStore;
-import coca.bulkhead.core.registry.RegistryEventConsumer;
+import coca.core.Registry;
+import coca.core.RegistryStore;
+import coca.core.registry.RegistryEventConsumer;
 import coca.bulkhead.internal.InMemoryThreadPoolBulkheadRegistry;
 
 import java.io.Closeable;

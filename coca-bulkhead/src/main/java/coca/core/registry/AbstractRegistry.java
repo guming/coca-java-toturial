@@ -1,6 +1,7 @@
-package coca.bulkhead.core.registry;
+package coca.core.registry;
 
 import coca.bulkhead.core.*;
+import coca.core.*;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -129,7 +130,7 @@ public class AbstractRegistry<E,C> implements Registry<E,C> {
         return this.configurations.remove(configName);
     }
 
-    private class RegistryEventProcessor extends EventProcessor<RegistryEvent> implements EventPublisher<E>, EventConsumer<RegistryEvent>{
+    private class RegistryEventProcessor extends EventProcessor<RegistryEvent> implements EventPublisher<E>, EventConsumer<RegistryEvent> {
 
         public RegistryEventProcessor(List<RegistryEventConsumer<E>> registryEventConsumers) {
             registryEventConsumers.forEach(consumer -> {

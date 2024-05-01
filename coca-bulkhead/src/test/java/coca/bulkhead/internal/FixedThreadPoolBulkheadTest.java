@@ -2,7 +2,7 @@ package coca.bulkhead.internal;
 
 import coca.bulkhead.ThreadPoolBulkhead;
 import coca.bulkhead.ThreadPoolBulkheadConfig;
-import coca.bulkhead.core.registry.*;
+import coca.core.registry.*;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.Before;
 import org.junit.Test;

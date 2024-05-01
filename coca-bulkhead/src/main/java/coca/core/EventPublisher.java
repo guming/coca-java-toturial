@@ -1,4 +1,4 @@
-package coca.bulkhead.core;
+package coca.core;
 
 public interface EventPublisher<T> {
     void onEvent(EventConsumer<T> eventConsumer);

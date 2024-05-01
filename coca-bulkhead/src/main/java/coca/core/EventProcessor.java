@@ -1,4 +1,4 @@
-package coca.bulkhead.core;
+package coca.core;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;

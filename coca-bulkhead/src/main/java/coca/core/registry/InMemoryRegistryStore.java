@@ -1,6 +1,6 @@
-package coca.bulkhead.core.registry;
+package coca.core.registry;
 
-import coca.bulkhead.core.RegistryStore;
+import coca.core.RegistryStore;
 
 import java.util.Collection;
 import java.util.Optional;

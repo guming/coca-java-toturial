@@ -1,9 +1,9 @@
-package coca.bulkhead.core;
+package coca.core;
 
-import coca.bulkhead.core.registry.EntryAddedEvent;
-import coca.bulkhead.core.registry.EntryRemovedEvent;
-import coca.bulkhead.core.registry.EntryReplacedEvent;
-import coca.bulkhead.core.registry.RegistryEvent;
+import coca.core.registry.EntryAddedEvent;
+import coca.core.registry.EntryRemovedEvent;
+import coca.core.registry.EntryReplacedEvent;
+import coca.core.registry.RegistryEvent;
 
 import java.util.Map;
 import java.util.Optional;
@@ -28,7 +28,7 @@ public interface Registry<E,C> {
 
     C removeConfiguration(String configName);
 
-    interface EventPublisher<E> extends coca.bulkhead.core.EventPublisher<RegistryEvent>{
+    interface EventPublisher<E> extends coca.core.EventPublisher<RegistryEvent> {
 
         EventPublisher<E> onEntryAdded(EventConsumer<EntryAddedEvent<E>> eventConsumer);
 

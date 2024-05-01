@@ -1,7 +1,7 @@
 package coca.bulkhead;
 
-import coca.bulkhead.core.EventConsumer;
-import coca.bulkhead.core.EventPublisher;
+import coca.core.EventConsumer;
+import coca.core.EventPublisher;
 import coca.bulkhead.event.BulkheadEvent;
 import coca.bulkhead.event.BulkheadOnCallFinishedEvent;
 import coca.bulkhead.event.BulkheadOnCallPermittedEvent;

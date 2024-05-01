@@ -1,7 +1,7 @@
 package coca.bulkhead;
 
-import coca.bulkhead.core.EventConsumer;
-import coca.bulkhead.core.funcs.CheckedSupplier;
+import coca.core.EventConsumer;
+import coca.core.funcs.CheckedSupplier;
 import coca.bulkhead.event.BulkheadEvent;
 import coca.bulkhead.event.BulkheadOnCallFinishedEvent;
 import coca.bulkhead.event.BulkheadOnCallPermittedEvent;
@@ -96,7 +96,7 @@ public interface Bulkhead {
         int getMaxAllowedConcurrentCalls();
     }
 
-    interface EventPublisher extends coca.bulkhead.core.EventPublisher<BulkheadEvent>{
+    interface EventPublisher extends coca.core.EventPublisher<BulkheadEvent> {
         EventPublisher onCallRejected(EventConsumer<BulkheadOnCallRejectedEvent> eventConsumer);
         EventPublisher onCallPermitted(EventConsumer<BulkheadOnCallPermittedEvent> eventConsumer);
         EventPublisher onCallFinished(EventConsumer<BulkheadOnCallFinishedEvent> eventConsumer);

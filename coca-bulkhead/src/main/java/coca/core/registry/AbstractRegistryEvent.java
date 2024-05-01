@@ -1,4 +1,4 @@
-package coca.bulkhead.core.registry;
+package coca.core.registry;
 
 import java.time.ZonedDateTime;
 
