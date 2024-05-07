@@ -25,7 +25,6 @@ public class AtomicRateLimiter implements RateLimiter {
     public AtomicRateLimiter(Map<String, String> tags, String name, RateLimiterConfig config) {
         this.tags = tags;
         this.name = name;
-        this.counter = new AtomicInteger(0);
         this.nonaTimeStart = nanoTime();
         processor = new RateLimiterEventProcessor();
         state = new AtomicReference<>(new State(config,0,config.getLimitForPeriod(),0));
