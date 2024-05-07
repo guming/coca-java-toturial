@@ -3,6 +3,7 @@ package coca.ratelimiter;
 import coca.core.Registry;
 import coca.core.RegistryStore;
 import coca.core.registry.RegistryEventConsumer;
+import coca.ratelimiter.internal.InMemoryRateLimiterRegistry;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -60,7 +61,7 @@ public interface RateLimiterRegistry extends Registry<RateLimiter,RateLimiterCon
         }
 
         public RateLimiterRegistry build() {
-            return null;
+            return new InMemoryRateLimiterRegistry(registryConfigs, registryEventConsumers, tags, registryStore);
         }
 
     }

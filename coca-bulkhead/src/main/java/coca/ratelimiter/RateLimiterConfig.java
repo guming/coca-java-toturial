@@ -4,7 +4,7 @@ import java.time.Duration;
 
 public class RateLimiterConfig {
     private final int limitForPeriod;
-    private final Duration timeDuration;
+    private final Duration timeoutDuration;
     private final Duration limitRefreshInterval;
     private static final Duration ACCEPTABLE_REFRESH_PERIOD = Duration.ofNanos(1L);
     public static RateLimiterConfig ofDefaults() {
@@ -13,7 +13,7 @@ public class RateLimiterConfig {
 
     public RateLimiterConfig(int limitForPeriod, Duration timeDuration, Duration limitRefreshInterval) {
         this.limitForPeriod = limitForPeriod;
-        this.timeDuration = timeDuration;
+        this.timeoutDuration = timeDuration;
         this.limitRefreshInterval = limitRefreshInterval;
     }
 
@@ -25,8 +25,8 @@ public class RateLimiterConfig {
         return limitForPeriod;
     }
 
-    public Duration getTimeDuration() {
-        return timeDuration;
+    public Duration getTimeoutDuration() {
+        return timeoutDuration;
     }
 
     public Duration getLimitRefreshInterval() {
@@ -36,7 +36,7 @@ public class RateLimiterConfig {
     public static class Builder {
 
         private int limitForPeriod =50;
-        private Duration timeDuration = Duration.ofSeconds(5L);
+        private Duration timeoutDuration = Duration.ofSeconds(5L);
         private Duration limitRefreshInterval = Duration.ofNanos(500);
 
         public Builder() {
@@ -44,15 +44,15 @@ public class RateLimiterConfig {
 
         public Builder(RateLimiterConfig config) {
             this.limitForPeriod = config.limitForPeriod;
-            this.timeDuration = config.timeDuration;
+            this.timeoutDuration = config.timeoutDuration;
             this.limitRefreshInterval = config.limitRefreshInterval;
         }
         public Builder limitForPeriod(int limitForPeriod) {
             this.limitForPeriod = limitForPeriod;
             return this;
         }
-        public Builder timeDuration(Duration timeDuration) {
-            this.timeDuration = timeDuration;
+        public Builder timeoutDuration(Duration timeoutDuration) {
+            this.timeoutDuration = timeoutDuration;
             return this;
         }
         public Builder limitRefreshInterval(Duration limitRefreshInterval) {
@@ -60,7 +60,7 @@ public class RateLimiterConfig {
             return this;
         }
         public RateLimiterConfig build() {
-            return new RateLimiterConfig(limitForPeriod, timeDuration, limitRefreshInterval);
+            return new RateLimiterConfig(limitForPeriod, timeoutDuration, limitRefreshInterval);
         }
     }
 }

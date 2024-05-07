@@ -2,6 +2,7 @@ package coca.ratelimiter.internal;
 
 import coca.core.RegistryStore;
 import coca.core.registry.AbstractRegistry;
+import coca.core.registry.InMemoryRegistryStore;
 import coca.core.registry.RegistryEventConsumer;
 import coca.ratelimiter.RateLimiter;
 import coca.ratelimiter.RateLimiterConfig;
@@ -51,6 +52,14 @@ public class InMemoryRateLimiterRegistry extends AbstractRegistry<RateLimiter,Ra
         this.configurations.putAll(configs);
     }
 
+    public InMemoryRateLimiterRegistry(Map<String, RateLimiterConfig> configs, List<RegistryEventConsumer<RateLimiter>> registryEventConsumers, Map<String, String> tags,
+                                       RegistryStore<RateLimiter> registryStore) {
+        super(configs.getOrDefault(DEFAULT_CONFIG, RateLimiterConfig.ofDefaults()),
+                registryEventConsumers, Optional.ofNullable(tags).orElse(emptyMap()),
+                Optional.ofNullable(registryStore).orElse(new InMemoryRegistryStore<>()));
+        this.configurations.putAll(configs);
+    }
+
 
     /**
      * default config
@@ -83,6 +92,7 @@ public class InMemoryRateLimiterRegistry extends AbstractRegistry<RateLimiter,Ra
     public InMemoryRateLimiterRegistry(RateLimiterConfig defaultConfig, List<RegistryEventConsumer<RateLimiter>> registryEventConsumers, Map<String, String> tags, RegistryStore<RateLimiter> registryStore) {
         super(defaultConfig, registryEventConsumers, tags, registryStore);
     }
+
 
     @Override
     public Set<RateLimiter> getAllRateLimiters() {

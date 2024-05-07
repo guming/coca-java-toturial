@@ -1,6 +1,7 @@
 package coca.ratelimiter.event;
 
 public class RateLimiterOnSuccessEvent extends AbstractRateLimiterEvent {
+
     public RateLimiterOnSuccessEvent(int numberOfPermits, String rateLimiterName) {
         super(numberOfPermits, rateLimiterName);
     }
