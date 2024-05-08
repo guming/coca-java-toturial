@@ -2,6 +2,7 @@ package coca.ratelimiter.internal;
 
 import coca.ratelimiter.RateLimiter;
 import coca.ratelimiter.RateLimiterConfig;
+import coca.ratelimiter.event.RateLimiterOnDrainedEvent;
 import coca.ratelimiter.event.RateLimiterOnFailureEvent;
 import coca.ratelimiter.event.RateLimiterOnSuccessEvent;
 
@@ -72,17 +73,27 @@ public class AtomicRateLimiter implements RateLimiter {
 
     @Override
     public void drainPermissions() {
-
+        AtomicRateLimiter.State prev;
+        AtomicRateLimiter.State next;
+        do {
+            prev = state.get();
+            next = calculateNextState(prev.activePermissions, 0, prev);
+        } while (!compareAndSet(prev, next));
+        if (processor.hasConsumer()) {
+            processor.consumeEvent(new RateLimiterOnDrainedEvent(Math.min(prev.activePermissions,0),name));
+        }
     }
 
     @Override
     public void changeTimeoutDuration(Duration timeoutDuration) {
-
+        RateLimiterConfig newConfig = RateLimiterConfig.from(state.get().config).timeoutDuration(timeoutDuration).build();
+        state.updateAndGet(currentState -> new State(newConfig,currentState.activePermissions,currentState.nanosToWait,currentState.activeCycle));
     }
 
     @Override
     public void changeLimitForPeriod(int limitForPeriod) {
-
+        RateLimiterConfig newConfig = RateLimiterConfig.from(state.get().config).limitForPeriod(limitForPeriod).build();
+        state.updateAndGet(currentState -> new State(newConfig,currentState.activePermissions,currentState.nanosToWait,currentState.activeCycle));
     }
 
     private static class State {
@@ -115,7 +126,7 @@ public class AtomicRateLimiter implements RateLimiter {
         AtomicRateLimiter.State next;
         do {
             prev = state.get();
-            next = caculateNextState(permits, timeoutNanos, prev);
+            next = calculateNextState(permits, timeoutNanos, prev);
         } while (!compareAndSet(prev,next));
         return next;
     }
@@ -129,11 +140,31 @@ public class AtomicRateLimiter implements RateLimiter {
     }
 
     private boolean waitForPermissionIfNecessary(long timeoutNanos, long nanosToWait) {
-
+        if (nanosToWait <= 0) {
+            return true;
+        }
+        if (timeoutNanos >= nanosToWait) {
+            return waitForPermission(nanosToWait);
+        }
+        waitForPermission(timeoutNanos);
         return false;
     }
 
-    private State caculateNextState(int permits, long timeoutNanos, State prev) {
+    private boolean waitForPermission(long nanosToWait) {
+        long deadline = System.nanoTime() + nanosToWait;
+        boolean wasInterrupted = false;
+        while (System.nanoTime() < deadline && !wasInterrupted) {
+            long sleep = deadline - System.nanoTime();
+            parkNanos(sleep);
+            wasInterrupted = Thread.interrupted();
+        }
+        if(wasInterrupted){
+            Thread.currentThread().interrupt();
+        }
+        return !wasInterrupted;
+    }
+
+    private State calculateNextState(int permits, long timeoutNanos, State prev) {
         long cycleRefreshInterval = prev.config.getLimitRefreshInterval().toNanos();
         int permissionsPerCycle = prev.config.getLimitForPeriod();
         long current = System.nanoTime();

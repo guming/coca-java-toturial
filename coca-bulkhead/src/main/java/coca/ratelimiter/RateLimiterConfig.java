@@ -17,6 +17,10 @@ public class RateLimiterConfig {
         this.limitRefreshInterval = limitRefreshInterval;
     }
 
+    public static Builder from(RateLimiterConfig prototype) {
+        return new Builder(prototype);
+    }
+
     public static Builder custom() {
         return new Builder();
     }
