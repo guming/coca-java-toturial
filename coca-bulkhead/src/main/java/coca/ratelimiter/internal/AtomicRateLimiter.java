@@ -31,6 +31,11 @@ public class AtomicRateLimiter implements RateLimiter {
     }
 
     @Override
+    public RateLimiterConfig getRateLimiterConfig() {
+        return state.get().config;
+    }
+
+    @Override
     public String getName() {
         return name;
     }
