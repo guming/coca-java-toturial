@@ -7,7 +7,6 @@ import coca.ratelimiter.event.RateLimiterOnSuccessEvent;
 
 import java.time.Duration;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static java.lang.Math.min;
@@ -18,14 +17,14 @@ public class AtomicRateLimiter implements RateLimiter {
 
     private final String name;
     private final Map<String, String> tags;
-    private final long nonaTimeStart;
+    private final long nanoTimeStart;
     private final RateLimiterEventProcessor processor;
     private final AtomicReference<State> state;
 
     public AtomicRateLimiter(Map<String, String> tags, String name, RateLimiterConfig config) {
         this.tags = tags;
         this.name = name;
-        this.nonaTimeStart = nanoTime();
+        this.nanoTimeStart = nanoTime();
         processor = new RateLimiterEventProcessor();
         state = new AtomicReference<>(new State(config,0,config.getLimitForPeriod(),0));
     }
@@ -56,7 +55,19 @@ public class AtomicRateLimiter implements RateLimiter {
 
     @Override
     public long reservePermission(int permits) {
-        return 0;
+        long timeoutNanos = state.get().config.getTimeoutDuration().toNanos();
+        State updated = updateStateWithBackoff(permits, timeoutNanos);
+        if(updated.nanosToWait<=0){
+            publishRateLimiterAcquisitionEvent(true, permits);
+            return 0;
+        }
+
+        if(timeoutNanos>=updated.nanosToWait){
+            publishRateLimiterAcquisitionEvent(true,permits);
+            return updated.nanosToWait;
+        }
+        publishRateLimiterAcquisitionEvent(false,permits);
+        return -1;
     }
 
     @Override
@@ -126,7 +137,7 @@ public class AtomicRateLimiter implements RateLimiter {
         long cycleRefreshInterval = prev.config.getLimitRefreshInterval().toNanos();
         int permissionsPerCycle = prev.config.getLimitForPeriod();
         long current = System.nanoTime();
-        long currentNanos = current - nonaTimeStart;
+        long currentNanos = current - nanoTimeStart;
         long currentCycle = currentNanos / cycleRefreshInterval;
 
         long nextCycle = prev.activeCycle;
