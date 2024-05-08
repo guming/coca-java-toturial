@@ -185,8 +185,7 @@ public class AtomicRateLimiter implements RateLimiter {
             nextPermissions = (int) min(nextPermissions + accumlatedPermissions, permissionsPerCycle);
         }
         long nanosToWait = nanosToWaitPermission(permits, cycleRefreshInterval, permissionsPerCycle, nextPermissions, currentNanos,currentCycle);
-        State nextState = reservePermissions(prev.config,permits,timeoutNanos,nextCycle,nextPermissions,nanosToWait);
-        return nextState;
+        return reservePermissions(prev.config,permits,timeoutNanos,nextCycle,nextPermissions,nanosToWait);
     }
 
     private State reservePermissions(RateLimiterConfig config, int permits, long timeoutNanos,
